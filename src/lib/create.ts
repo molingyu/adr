@@ -1,6 +1,7 @@
 let fs = require('fs')
 let path = require('path')
 let mkdirp = require('mkdirp')
+let gitConfig = require('git-config')
 
 import Config from './Config'
 import Utils from './utils'
@@ -11,11 +12,13 @@ function createDecisions (name: string, savePath: string | any | void) {
   let raw = fs.readFileSync(__dirname + path.normalize('/templates/' + language + '.md'), 'utf8')
   let newDate = Utils.createDateString()
   let fileName = Utils.generateFileName(name)
-
+  let config = gitConfig.sync()
   let newIndex = Utils.getNewIndexString()
   let fileData = raw.replace(/{NUMBER}/g, Utils.getLatestIndex() + 1)
     .replace(/{TITLE}/g, name)
     .replace(/{DATE}/g, newDate)
+    .replace(/{AUTHOR}/g, config.user.name)
+    .replace(/{EMAIL}/g, config.user.email)
 
   let filePath = savePath + newIndex + '-' + fileName + '.md'
   fs.writeFileSync(filePath, fileData)

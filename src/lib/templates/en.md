@@ -2,6 +2,10 @@
 
 Date: {DATE}
 
+## Author
+
+[{AUTHOR}](mailto:{EMAIL})
+
 ## Status
 
 STATUS：proposed/accepted/done/deprecated/superseded
