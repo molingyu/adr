@@ -1,4 +1,3 @@
-let walkSync = require('walk-sync')
 let inquirer = require('inquirer')
 
 import Utils from './utils'
@@ -8,23 +7,8 @@ import Config from './Config'
 let path = Config.getSavePath()
 let i18n = Utils.getI18n()
 
-let getAllFilesName = function (): string[] {
-  let outputArray = ['']
-  let files = walkSync.entries(path, {globs: ['**/*.md']})
-  files.forEach(function (file) {
-    let fileName = file.relativePath
-
-    let index = Utils.getIndexByString(fileName)
-    if (index) {
-      outputArray[index] = fileName
-    }
-  })
-
-  return outputArray
-}
-
 export function status (index): void {
-  let fileName = getAllFilesName()[index]
+  let fileName = Utils.getAllFilesName()[index]
   let status = StatusHelper.getLatestStatus(path + fileName)
   let statusList = i18n.statusStr.split('/')
   inquirer.prompt([{

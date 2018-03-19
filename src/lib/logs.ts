@@ -1,4 +1,3 @@
-let walkSync = require('walk-sync')
 let Table = require('table')
 
 import Utils from './utils'
@@ -6,21 +5,6 @@ import StatusHelper from './StatusHelper'
 import Config from './Config'
 
 let path = Config.getSavePath()
-
-let getAllFilesName = function (): string[] {
-  let outputArray = ['']
-  let files = walkSync.entries(path, { globs: ['**/*.md']})
-  files.forEach( function (file) {
-    let fileName = file.relativePath
-
-    let index = Utils.getIndexByString(fileName)
-    if (index) {
-      outputArray[index] = fileName
-    }
-  })
-
-  return outputArray
-}
 
 function createLogsHeader (allStatus: string[]): string[] {
   let tableHeader: string[] = []
@@ -48,7 +32,7 @@ function createLogsBody (allStatus: string[], tableData: string[][]): string[][]
 }
 
 export function logs (index): string {
-  let outputArray = getAllFilesName()
+  let outputArray = Utils.getAllFilesName()
   let currentFileName = outputArray[index]
   let filePath = path + currentFileName
   let allStatus = StatusHelper.getAllStatus(filePath)

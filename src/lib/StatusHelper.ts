@@ -10,15 +10,9 @@ function getStatusSection (tree: any) {
   let statusSection: string[] = []
   for (let i = 0; i < tree.length; i++) {
     let node = tree[i]
-    if (statusFlag && node[0] === 'header') {
-      return statusSection
-    }
-    if (statusFlag) {
-      statusSection.push(node)
-    }
-    if (node[0] === 'header' && node[2] === i18n.Status) {
-      statusFlag = true
-    }
+    if (statusFlag && node[0] === 'header') return statusSection
+    if (statusFlag) statusSection.push(node)
+    if (node[0] === 'header' && node[2] === i18n.Status) statusFlag = true
   }
   return statusSection
 }
@@ -45,17 +39,17 @@ function setStatus (filePath, status) {
     console.log(error)
     return []
   }
-  let flag = false
+  let statusFlag = false
   let regExp = `## ${i18n.Status}`
   let data: string[] = fileData.split('\n')
   for (let i = 0; i < data.length; i++) {
     let line: string = data[i]
-    if (flag && line[0] === '#') {
+    if (statusFlag && line[0] === '#') {
       data.splice(i, 0, `${Utils.createDateString()} ${status}`)
       data.splice(i + 1, 0, '')
       return fs.writeFileSync(filePath, data.join('\n'))
     }
-    if (line.match(regExp)) flag = true
+    if (line.match(regExp)) statusFlag = true
   }
 }
 

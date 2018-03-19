@@ -79,6 +79,21 @@ function createDateString (): string {
   return moment().format('YYYY-MM-DD')
 }
 
+function getAllFilesName (): string[] {
+  let outputArray = ['']
+  let files = walkSync.entries(Config.getSavePath(), { globs: ['**/*.md']})
+  files.forEach( function (file) {
+    let fileName = file.relativePath
+
+    let index = getIndexByString(fileName)
+    if (index) {
+      outputArray[index] = fileName
+    }
+  })
+
+  return outputArray
+}
+
 let Utils = {
   getNewIndexString: getNewIndexString,
   getLatestIndex: getLatestIndex,
@@ -88,7 +103,8 @@ let Utils = {
   getI18n: getI18n,
   createDateString: createDateString,
   getNumberLength: getNumberLength,
-  getIndexByString: getIndexByString
+  getIndexByString: getIndexByString,
+  getAllFilesName: getAllFilesName
 }
 
 export default Utils
