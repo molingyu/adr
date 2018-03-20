@@ -26,7 +26,7 @@ export function getI18n () {
       modifiedDate: '上次修改时间',
       lastStatus: '最后状态',
       logSavePath: '保存路径：',
-      tocHeader: '架构决策记录',
+      tocHeader: '决策记录',
       status: {
         proposed: '提议',
         accepted: '通过',

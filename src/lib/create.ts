@@ -12,17 +12,23 @@ function createDecisions (name: string, savePath: string | any | void) {
   let raw = fs.readFileSync(__dirname + path.normalize('/templates/' + language + '.md'), 'utf8')
   let newDate = Utils.createDateString()
   let fileName = Utils.generateFileName(name)
-  gitConfig(function (err, config) {
-    if (err) return console.log('git info get error')
-    let newIndex = Utils.getNewIndexString()
-    let fileData = raw.replace(/{NUMBER}/g, Utils.getLatestIndex() + 1)
-      .replace(/{TITLE}/g, name)
-      .replace(/{DATE}/g, newDate)
-      .replace(/{AUTHOR}/g, config.user.name)
-      .replace(/{EMAIL}/g, config.user.email)
-    let filePath = savePath + newIndex + '-' + fileName + '.md'
-    fs.writeFileSync(filePath, fileData)
-  })
+  let config = gitConfig.sync()
+  let userName = ''
+  let email = ''
+  if (config === void 0 && config.user === void 0) {
+    console.log('git info get error')
+  } else {
+    userName = config.user.name
+    email = config.user.email
+  }
+  let newIndex = Utils.getNewIndexString()
+  let fileData = raw.replace(/{NUMBER}/g, Utils.getLatestIndex() + 1)
+    .replace(/{TITLE}/g, name)
+    .replace(/{DATE}/g, newDate)
+    .replace(/{AUTHOR}/g, userName)
+    .replace(/{EMAIL}/g, email)
+  let filePath = savePath + newIndex + '-' + fileName + '.md'
+  fs.writeFileSync(filePath, fileData)
 }
 
 export function create (name: string) {
