@@ -27,21 +27,23 @@ function getStatusWithDate (statusSections: string[]) {
       }
     }
   }
-
   return status
 }
 
-function setStatus (filePath, status) {
+function getFileData (filePath): string {
   let fileData
   try {
-    fileData = fs.readFileSync(filePath, 'utf8')
+    return fileData = fs.readFileSync(filePath, 'utf8')
   } catch (error) {
     console.log(error)
-    return []
+    return ''
   }
+}
+
+function setStatus (filePath: string, status: string) {
   let statusFlag = false
   let regExp = `## ${i18n.Status}`
-  let data: string[] = fileData.split('\n')
+  let data: string[] = getFileData(filePath).split('\n')
   for (let i = 0; i < data.length; i++) {
     let line: string = data[i]
     if (statusFlag && line[0] === '#') {
@@ -53,15 +55,8 @@ function setStatus (filePath, status) {
   }
 }
 
-function getAllStatus (filePath): string[] {
-  let fileData
-  try {
-    fileData = fs.readFileSync(filePath, 'utf8')
-  } catch (error) {
-    console.log(error)
-    return []
-  }
-  let tree = md.parse(fileData)
+function getAllStatus (filePath: string): string[] {
+  let tree = md.parse(getFileData(filePath))
   let statusSections = getStatusSection(tree)
   let status = getStatusWithDate(statusSections)
 

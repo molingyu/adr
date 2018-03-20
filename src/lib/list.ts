@@ -12,22 +12,18 @@ let path = Config.getSavePath()
 
 export function getStatusColor (lastStatus: string) {
   let allStatus = Utils.getI18n()['status']
-  let color: string | undefined = ''
   if (!allStatus) {
     return StatusColor.get('done')
   }
-  Object.keys(allStatus).forEach(function (statusKey) {
+  Object.keys(allStatus).forEach(statusKey => {
     if (allStatus[statusKey] === lastStatus) {
-      color = StatusColor.get(statusKey)
+      return StatusColor.get(statusKey)
     }
   })
-  return color
 }
 
 function getStatusWithColor (lastStatus: string) {
-  if (!lastStatus) {
-    return lastStatus
-  }
+  if (!lastStatus) return lastStatus
   let originLastStatus = lastStatus
   let splitStatus = lastStatus.split(' ')
   if (splitStatus.length > 1) {
@@ -57,7 +53,6 @@ function listAdrByPath (path: string): string {
     .setEnd()
     .setBody(buildTocBodyFun)
     .build()
-
   return Table.table(results)
 }
 

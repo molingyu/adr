@@ -2,6 +2,7 @@ let sinon = require('sinon')
 let fs = require('fs')
 let mkdirp = require('mkdirp')
 let walkSync = require('walk-sync')
+let gitConfig = require('git-config')
 
 import { test } from 'ava'
 
@@ -22,6 +23,13 @@ let adrOptions = JSON.stringify({
   language: 'en'
 })
 
+let getConf = {
+  user: {
+    name: 'stark',
+    email: 'stark@email.com'
+  }
+}
+
 test('ADR: create', t => {
   let consoleSpy = sinon.stub(console, 'log')
   let mkdirpSync = sinon.stub(mkdirp, 'sync')
@@ -37,6 +45,7 @@ test('ADR: create', t => {
     }
   ])
   let fsExistSpy = sinon.stub(fs, 'existsSync').returns(true)
+  let gitConfigSpy = sinon.stub(gitConfig, 'sync').returns(getConf)
   let fsReadSpy = sinon.stub(fs, 'readFileSync')
     .onCall(0).returns(JSON.stringify(adrOptions))
     .onCall(1).returns(JSON.stringify(adrOptions))
@@ -55,6 +64,7 @@ test('ADR: create', t => {
 
   fsWriteSyncSpy.restore()
   ADRGetSavePathSpy.restore()
+  gitConfigSpy.restore()
   fsExistSpy.restore()
   fsReadSpy.restore()
   entriesSpy.restore()
